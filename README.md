@@ -1,6 +1,6 @@
-# Webflow → Clean Code (Cursor Agent Skill)
+# Webflow → Clean Code (Agent Skill)
 
-A [Cursor Agent Skill](https://cursor.com/docs/context/skills) that guides AI agents through converting Webflow-exported HTML/CSS/JS into clean, self-contained static code—no `webflow.js`, no Webflow CDN assets, no `.w-*` class dependencies.
+An [Agent Skill](https://cursor.com/docs/context/skills) that guides AI agents through converting Webflow-exported HTML/CSS/JS into clean, self-contained static code—no `webflow.js`, no Webflow CDN assets, no `.w-*` class dependencies.
 
 ## What it does
 

@@ -1,67 +1,54 @@
-# Webflow → Clean Code (Agent Skill)
+# Webflow to clean code
 
-An [Agent Skill](https://cursor.com/docs/context/skills) that guides AI agents through converting Webflow-exported HTML/CSS/JS into clean, self-contained static code—no `webflow.js`, no Webflow CDN assets, no `.w-*` class dependencies.
+**Category: Web migration | Format: Agent skill**
 
-## What it does
+A repeatable workflow for converting Webflow-exported pages into self-contained HTML, CSS and JavaScript. It guides an AI coding agent through removing Webflow runtime dependencies while preserving the page's appearance and behaviour.
 
-When you import a Webflow export or migrate a page off Webflow, this skill walks the agent through:
+This repository contains instructions for an agent. It is not a standalone converter.
 
-1. **Inventory** — map structure to keep vs. simplify
-2. **Strip coupling** — remove Webflow scripts, CDN links, `data-wf-*` attributes, and utility classes
-3. **Styles** — rename `*.webflow.css`, reorganize into your project’s CSS
-4. **JavaScript** — reimplement tabs, sliders, forms without `webflow.js`
-5. **Assets** — copy images/Lottie into your project and fix paths
-6. **Verify** — grep checks and manual QA before calling it done
+## When to use it
+
+Use it when moving an exported site to another host, taking ownership of generated code or replacing Webflow-specific interactions with maintainable JavaScript.
+
+| Input | Work performed | Output |
+| --- | --- | --- |
+| Exported HTML, styles, scripts and assets | Inventory dependencies, replace interactions, reorganise styles and verify the result | Static files that can be reviewed and hosted independently |
 
 ## Install
 
-### Option A — Clone into your skills folder (recommended)
-
-**Personal skill** (all projects):
+For Cursor, clone into the personal skills directory:
 
 ```bash
+mkdir -p ~/.cursor/skills
 git clone https://github.com/morrimoz/webflow-to-clean-code.git ~/.cursor/skills/webflow-to-clean-code
 ```
 
-**Project skill** (this repo only):
+For a shared project skill, use `.cursor/skills/webflow-to-clean-code` as the destination. Other agents can read [SKILL.md](SKILL.md) directly. Start a new agent session after installation.
 
-```bash
-git clone https://github.com/morrimoz/webflow-to-clean-code.git .cursor/skills/webflow-to-clean-code
+## Example request
+
+```text
+Use webflow-to-clean-code on the exported site in site-export/.
+Keep the design, replace Webflow interactions and verify navigation and forms.
 ```
 
-### Option B — Copy manually
+The workflow inventories the export, removes coupling, reorganises CSS, replaces JavaScript interactions, resolves assets and checks the rendered pages.
 
-1. Download or clone this repository.
-2. Copy the folder into `~/.cursor/skills/webflow-to-clean-code/` (personal) or `.cursor/skills/webflow-to-clean-code/` (project).
-3. Ensure the path ends with `webflow-to-clean-code/SKILL.md`.
+## Verification and limits
 
-Restart Cursor or start a new agent session so the skill is picked up.
-
-## Usage
-
-The skill applies automatically when you mention things like:
-
-- “Webflow export”
-- “leaving Webflow”
-- “strip webflow.js”
-- “clean up this Webflow page”
-
-You can also invoke it explicitly: *“Use the webflow-to-clean-code skill on this export.”*
-
-## Verification snippet
-
-After migration, run from your project root (adjust paths as needed):
+Search the output for remaining runtime dependencies. Replace `site-output` with the actual output folder:
 
 ```bash
-grep -rn \
-  "webflow\.js\|webflow\.css\|webflow\.io\|uploads-ssl\.webflow\.com\|d3e54v103j8qbb\|w-inline-block\|w-clearfix\|w-container\|w--current\|w--tab-active\|data-wf-page\|data-wf-site\|generator.*Webflow" \
-  ./public ./src ./pages ./app 2>/dev/null || echo "Clean!"
+rg -n 'webflow\.js|webflow\.css|webflow\.io|uploads-ssl\.webflow\.com|data-wf-page|data-wf-site' site-output
 ```
 
-## License
+No matches is one check, not proof that the migration works. Compare layouts at desktop and mobile sizes, exercise keyboard navigation and test every interaction. Forms, CMS behaviour, hosting rules and external services may need separate replacements.
 
-MIT — see [LICENSE](LICENSE).
+There is no bundled before/after site or automated migration benchmark. Results depend on the export, the coding agent and verification.
 
-## Contributing
+## Related tools
 
-Issues and PRs welcome. If you have Webflow migration patterns that aren’t covered, open an issue or PR with a concrete example.
+- [Plan to execution plan](https://github.com/morrimoz/plan-to-execution-plan) - Organise a larger migration into bounded implementation steps.
+- [Deploy dash normalizer](https://github.com/morrimoz/cursor-skill-normalize-deploy-dashes) - Apply a text convention before static deployment.
+
+[MIT license](LICENSE)

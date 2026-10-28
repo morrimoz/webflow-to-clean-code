@@ -1,6 +1,6 @@
 ---
 name: webflow-to-clean-code
-description: Converts Webflow-exported HTML/CSS/JS into clean, self-contained static code—removes Webflow.js, Webflow-hosted assets, and w-* class dependencies; replaces them with project-owned markup, styles, and scripts. Use when importing a Webflow export, stripping w-inline-block and Webflow comments, migrating a Webflow page to any static host or framework, or the user mentions "Webflow export" or "leaving Webflow".
+description: Converts Webflow-exported HTML/CSS/JS into clean, self-contained static code. Removes Webflow.js, Webflow-hosted assets, and w-* class dependencies; replaces them with project-owned markup, styles, and scripts. Use when importing a Webflow export, stripping w-inline-block and Webflow comments, migrating a Webflow page to any static host or framework, or the user mentions "Webflow export" or "leaving Webflow".
 ---
 
 # Webflow export → clean code
@@ -36,16 +36,16 @@ Remove every dependency on Webflow's infrastructure and class naming:
 - **Replace** Webflow utility classes you do not own (e.g. `w-inline-block`, `w-clearfix`, `w-container`) with project-owned class names and define equivalent CSS rules yourself.
 - **Remove** the `data-wf-page`, `data-wf-site`, and `data-wf-domain` attributes from `<html>`.
 - **Delete** HTML comments that explain Webflow internals (e.g. `<!-- [if lte IE 9]>`). Replace with short comments describing *your* behavior only if needed.
-- **Do not** add CSS whose only purpose is fighting `.w-*` rules — fix the markup instead.
+- **Do not** add CSS whose only purpose is fighting `.w-*` rules - fix the markup instead.
 
 ### 3) Stylesheets
 
 - Audit the exported CSS files. Webflow exports one large `<project-name>.webflow.css` and sometimes a `normalize.css`. You can:
-  - **Keep** the Webflow CSS if it is minimal — rename it something project-owned (e.g. `styles/main.css`).
+  - **Keep** the Webflow CSS if it is minimal - rename it something project-owned (e.g. `styles/main.css`).
   - **Rewrite** it progressively, moving rules into feature/component files as you clean up the HTML.
 - Either way, **rename the file** and update the `<link>` tag so there is no `webflow.css` in production.
 - **Order**: base/reset/tokens first, layout next, component overrides last. Page-specific overrides load last.
-- **Do not** paste large blocks of CSS that already exist in your project's shared sheets — link the existing file instead.
+- **Do not** paste large blocks of CSS that already exist in your project's shared sheets - link the existing file instead.
 
 ### 4) JavaScript and interactivity
 
@@ -59,26 +59,26 @@ Remove every dependency on Webflow's infrastructure and class naming:
 ### 5) Tabs (if applicable)
 
 - If you are replacing Webflow's built-in tab widget, be aware that Webflow uses `w--current` and `w--tab-active` classes to mark active state. When you rewrite the JS, rename these classes to ones you own (e.g. `is-active`) and update HTML and JS together so initial state and click behavior stay in sync.
-- The **initial tab** must match both the active link class and active pane class in the HTML — mismatches cause a flash of wrong state on load.
+- The **initial tab** must match both the active link class and active pane class in the HTML - mismatches cause a flash of wrong state on load.
 
 ### 6) Forms and controls
 
 - **Custom checkboxes**: Webflow generates a hidden native `<input>` + visible div combo. Port it as a native `<input type="checkbox">` with a visible sibling and proper `<label>` association, using `:focus-visible` for keyboard styles.
-- **Do not** hide the native `<input>` with `z-index: -1` in a way that breaks focus or click — use a visually-hidden pattern that preserves accessibility.
+- **Do not** hide the native `<input>` with `z-index: -1` in a way that breaks focus or click - use a visually-hidden pattern that preserves accessibility.
 - **Decorative elements** (e.g. visual checkbox next to a real one): use `aria-hidden="true"` and `tabindex="-1"` so screen readers and keyboards ignore them.
 
 ### 7) Images, icons, and media
 
 - Webflow exports assets into an `images/` folder. **Copy every asset** your page uses into your project's asset directory (e.g. `public/assets/images/`, `static/`, `assets/`).
-- **Update all `src` and `href` references** to point to your project's paths — not `../images/…` or Webflow CDN URLs (`https://uploads-ssl.webflow.com/...`).
+- **Update all `src` and `href` references** to point to your project's paths - not `../images/…` or Webflow CDN URLs (`https://uploads-ssl.webflow.com/...`).
 - Use **root-relative URLs** (e.g. `/assets/images/hero.png`) for portability across pages and hosting configs.
-- Check for Webflow-generated Lottie JSON files (`animations/`) — copy those too if the page uses them, and swap the CDN Lottie loader for a self-hosted or npm-installed version.
+- Check for Webflow-generated Lottie JSON files (`animations/`) - copy those too if the page uses them, and swap the CDN Lottie loader for a self-hosted or npm-installed version.
 
 ### 8) Responsive layout
 
-- Webflow uses `max-width: 940px` and `max-width: 1280px` as common container widths — keep these if the design requires them, or adjust to match your design system.
+- Webflow uses `max-width: 940px` and `max-width: 1280px` as common container widths - keep these if the design requires them, or adjust to match your design system.
 - Check every media query breakpoint in the exported CSS. Webflow's default breakpoints are: `991px` (tablet), `767px` (landscape phone), `479px` (portrait phone). Rename or reorganize as needed.
-- `max-width` alone does not center a grid child — pair with `margin: 0 auto` or `justify-self: center` as needed.
+- `max-width` alone does not center a grid child - pair with `margin: 0 auto` or `justify-self: center` as needed.
 - Tighten horizontal padding on small screens; set explicit mobile padding when the design requires it.
 
 ### 9) Meta and `<head>` cleanup
@@ -122,16 +122,16 @@ Also check manually:
 
 ## Do not
 
-- Do **not** leave Webflow CDN CSS or JS loading in production — the page will depend on Webflow's infrastructure indefinitely.
-- Do **not** leave `w-*` class names as the **only reason layout works** — rename them or replace with your own rules.
+- Do **not** leave Webflow CDN CSS or JS loading in production - the page will depend on Webflow's infrastructure indefinitely.
+- Do **not** leave `w-*` class names as the **only reason layout works** - rename them or replace with your own rules.
 - Do **not** cite Webflow in production CSS comments as the authority for a rule.
 - Do **not** keep the `<meta name="generator" content="Webflow">` tag.
-- Do **not** reference Webflow export paths (`images/`, `documents/`) directly — copy assets into your project.
+- Do **not** reference Webflow export paths (`images/`, `documents/`) directly - copy assets into your project.
 
 ---
 
 ## References
 
-- [Webflow: Exporting code](https://university.webflow.com/lesson/export-your-code) — official export docs; production code should not depend on exported Webflow infrastructure.
-- [MDN: Writing accessible forms](https://developer.mozilla.org/en-US/docs/Learn/Forms/How_to_structure_a_web_form) — for replacing Webflow's form markup.
-- [Splide](https://splidejs.com/) / [Swiper](https://swiperjs.com/) — drop-in replacements for Webflow's built-in slider if needed.
+- [Webflow: Exporting code](https://university.webflow.com/lesson/export-your-code) - official export docs; production code should not depend on exported Webflow infrastructure.
+- [MDN: Writing accessible forms](https://developer.mozilla.org/en-US/docs/Learn/Forms/How_to_structure_a_web_form) - for replacing Webflow's form markup.
+- [Splide](https://splidejs.com/) / [Swiper](https://swiperjs.com/) - drop-in replacements for Webflow's built-in slider if needed.

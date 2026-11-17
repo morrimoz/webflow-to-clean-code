@@ -49,6 +49,5 @@ There is no bundled before/after site or automated migration benchmark. Results 
 ## Related tools
 
 - [Plan to execution plan](https://github.com/morrimoz/plan-to-execution-plan) - Organise a larger migration into bounded implementation steps.
-- [Deploy dash normalizer](https://github.com/morrimoz/cursor-skill-normalize-deploy-dashes) - Apply a text convention before static deployment.
 
 [MIT license](LICENSE)
